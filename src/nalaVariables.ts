@@ -11,7 +11,8 @@ export const fetchNalaVariables = async () => {
         results.push({
             group: group.replace('-variant', 'Variant'),
             hex,
-            tone: parseInt(tone)
+            tone: parseInt(tone),
+            source: 'nala'
         })
     }
 

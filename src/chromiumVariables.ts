@@ -18,6 +18,7 @@ export const getValuesFor = (theme: string, variables: AvailableVariable[]): Var
     const palette = themeFromSourceColor(argbFromHex(theme))
     return variables.map(v => ({
         ...v,
-        hex: hexFromArgb(palette.palettes[v.group].tone(v.tone)).slice(1)
+        hex: hexFromArgb(palette.palettes[v.group].tone(v.tone)).slice(1),
+        source: 'generated'
     }))
 }

@@ -14,18 +14,23 @@ function usePromise<T>(promise: () => Promise<T>) {
 
 
 function App() {
-  const [theme, setTheme] = useState('#76767a')
+  const [primary, setPrimary] = useState('#6261FF')
+  const [neutral, setNeutral] = useState('#76767a')
   const nalaVariables = usePromise(fetchNalaVariables) ?? []
   const chromiumVariables = usePromise(fetchChromiumVariables) ?? []
-  const chromiumWithValue = useMemo(() => getValuesFor(theme, chromiumVariables), [theme, chromiumVariables])
+  const chromiumWithValue = useMemo(() => getValuesFor(neutral, chromiumVariables), [neutral, chromiumVariables])
   const deduplicated = useMemo(() => deduplicatePreferringNala({ nala: nalaVariables, chromium: chromiumWithValue }), [nalaVariables, chromiumVariables])
   return <div>
+  <label>
+    Primary
+    <input pattern='#([a-fA-F0-9]{6})' value={primary} onChange={e => setPrimary(e.target.value)} />
+  </label>
     <label>
-      Theme
-      <input value={theme} onChange={e => setTheme(e.target.value)} />
+      Neutral
+      <input pattern='#([a-fA-F0-9]{6})' value={neutral} onChange={e => setNeutral(e.target.value)} />
     </label>
     <pre>
-      {deduplicated.map(r => variableToColorRef(r)).join('\n')}
+      {deduplicated.map(r => variableToColorRef(r) + " // " + r.source).join('\n')}
     </pre>
   </div>
 }

@@ -2,6 +2,7 @@ export type Variable = {
     group: string,
     tone: number,
     hex: string
+    source?: 'nala' | 'generated'
 }
 
 export const allowedGroups = [
