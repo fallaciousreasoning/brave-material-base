@@ -1,7 +1,12 @@
-import { themeFromSourceColor, argbFromHex, hexFromArgb } from '@material/material-color-utilities'
+import { themeFromSourceColor, argbFromHex, hexFromArgb, TonalPalette } from '@material/material-color-utilities'
 import { allowedGroups, Variable } from './variable'
 
 type AvailableVariable = Omit<Variable, 'hex'>
+
+type Theme = {
+    primary: string
+    neutral: string
+}
 
 export const fetchChromiumVariables = async (): Promise<AvailableVariable[]> => {
     const text = await fetch('https://raw.githubusercontent.com/brave/chromium/main/ui/color/color_id.h').then(r => r.text())
@@ -14,8 +19,13 @@ export const fetchChromiumVariables = async (): Promise<AvailableVariable[]> => 
         .filter(r => allowedGroups.includes(r.group))
 }
 
-export const getValuesFor = (theme: string, variables: AvailableVariable[]): Variable[] => {
-    const palette = themeFromSourceColor(argbFromHex(theme))
+export const getValuesFor = ({primary, neutral}: Theme, variables: AvailableVariable[]): Variable[] => {
+    const primaryN = argbFromHex(primary)
+    const neutralN = argbFromHex(neutral)
+    const palette = themeFromSourceColor(primaryN)
+    palette.palettes.neutral = TonalPalette.fromInt(neutralN)
+    palette.palettes.neutralVariant = TonalPalette.fromInt(argbFromHex('#818FBA'))
+
     return variables.map(v => ({
         ...v,
         hex: hexFromArgb(palette.palettes[v.group].tone(v.tone)).slice(1),

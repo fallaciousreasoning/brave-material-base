@@ -18,13 +18,14 @@ function App() {
   const [neutral, setNeutral] = useState('#76767a')
   const nalaVariables = usePromise(fetchNalaVariables) ?? []
   const chromiumVariables = usePromise(fetchChromiumVariables) ?? []
-  const chromiumWithValue = useMemo(() => getValuesFor(neutral, chromiumVariables), [neutral, chromiumVariables])
+  const chromiumWithValue = useMemo(() => getValuesFor({ neutral, primary }, chromiumVariables), [neutral, chromiumVariables])
   const deduplicated = useMemo(() => deduplicatePreferringNala({ nala: nalaVariables, chromium: chromiumWithValue }), [nalaVariables, chromiumVariables])
+
   return <div>
-  <label>
-    Primary
-    <input pattern='#([a-fA-F0-9]{6})' value={primary} onChange={e => setPrimary(e.target.value)} />
-  </label>
+    <label>
+      Primary
+      <input pattern='#([a-fA-F0-9]{6})' value={primary} onChange={e => setPrimary(e.target.value)} />
+    </label>
     <label>
       Neutral
       <input pattern='#([a-fA-F0-9]{6})' value={neutral} onChange={e => setNeutral(e.target.value)} />
