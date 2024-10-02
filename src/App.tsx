@@ -20,7 +20,7 @@ function App() {
   const chromiumVariables = usePromise(fetchChromiumVariables) ?? []
   const chromiumWithValue = useMemo(() => getValuesFor({ neutral, primary }, chromiumVariables), [neutral, chromiumVariables])
   const deduplicated = useMemo(() => deduplicatePreferringNala({ nala: nalaVariables, chromium: chromiumWithValue }), [nalaVariables, chromiumVariables])
-
+  const chromiumOverrideText = deduplicated.map(r => variableToColorRef(r) + " // " + r.source).join('\n')
   return <div>
     <label>
       Primary
@@ -30,8 +30,9 @@ function App() {
       Neutral
       <input pattern='#([a-fA-F0-9]{6})' value={neutral} onChange={e => setNeutral(e.target.value)} />
     </label>
+    <button onClick={() => navigator.clipboard.writeText(chromiumOverrideText)}>Copy Values</button>
     <pre>
-      {deduplicated.map(r => variableToColorRef(r) + " // " + r.source).join('\n')}
+      {chromiumOverrideText}
     </pre>
   </div>
 }
